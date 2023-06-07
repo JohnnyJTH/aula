@@ -8,7 +8,7 @@
 </script>
 
 <div
-  class={cn(`glass-morphism ${animate ? "glass-morphism-3d" : ""}`, className)}
+  class={cn(`glass-morphism ${animate ? "glass-morphism-3d cursor-pointer" : ""}`, className)}
   {...$$restProps}
   on:click
   on:focusin
@@ -27,7 +27,6 @@
     -webkit-backdrop-filter: blur(8px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
-    cursor: pointer;
     transition: all 0.3s ease-in-out;
   }
 
