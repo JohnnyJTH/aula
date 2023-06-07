@@ -5,7 +5,7 @@
 
 <div class="bg-light dark:bg-dark relative flex min-h-screen flex-col">
   <SiteHeader />
-  <div class="prose">
+  <div class="prose dark:prose-invert">
     <slot />
   </div>
 </div>
