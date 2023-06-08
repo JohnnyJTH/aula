@@ -13,6 +13,7 @@
   "devDependencies": {
     "@sveltejs/adapter-auto": "^2.0.0",
     "@sveltejs/kit": "^1.5.0",
+    "@types/luxon": "^3.3.0",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "autoprefixer": "^10.4.14",
@@ -35,6 +36,7 @@
     "clsx": "^1.2.1",
     "esm-env": "^1.0.0",
     "lucide-svelte": "^0.240.0",
+    "luxon": "^3.3.0",
     "radix-svelte": "^0.7.1",
     "tailwind-merge": "^1.13.0",
     "tailwindcss-animate": "^1.0.5"

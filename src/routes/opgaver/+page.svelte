@@ -14,38 +14,51 @@
     HoverCardContent,
     HoverCardTrigger,
   } from "$components/ui/hover-card";
+  import { Skeleton } from "$components/ui/skeleton";
+  import { authStore } from "$lib/stores";
+  import { onMount } from "svelte";
+  import { DateTime } from "luxon";
+  import type { Assignment, RawAssignment } from "$lib/types/assignments";
 
-  let opgaver = [
-    {
-      title: "Opgave 1",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies ultrices, nunc nunc ali",
-      status: "finished",
-      hold: "L1d kit",
-      link: "https://google.com",
-    },
-    {
-      title: "Opgave 1",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies ultrices, nunc nunc ali",
-      status: "missing",
-      hold: "L1d En",
-      link: "https://google.com",
-    },
-    {
-      title: "Opgave 1",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies ultrices, nunc nunc ali",
-      status: "finished",
-      hold: "L1d kit",
-      link: "https://google.com",
-    },
-  ];
+  let loading = true;
+  let rawAssignments: Assignment[] = [];
+  let assignments: Assignment[] = [];
+
+  onMount(async () => {
+    const response = await fetch("https://api.betterlectio.dk/opgaver", {
+      headers: {
+        "lectio-cookie": $authStore.cookie,
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    rawAssignments = data.map((assignment: RawAssignment) => ({
+      title: assignment.opgavetitel,
+      description: assignment.opgavenote,
+      date: DateTime.fromFormat(assignment.frist, "d/M-yyyy HH:mm", {
+        locale: "da",
+      }),
+      status: assignment.status,
+      hold: assignment.hold,
+      link: assignment.exerciseid,
+    }));
+    loading = false;
+  });
+
+  $: assignments = rawAssignments.filter((opgave) => {
+    if (selected == "upcoming") {
+      return opgave.status == "Afventer";
+    } else if (selected == "finished") {
+      return opgave.status == "Afleveret";
+    } else if (selected == "missing") {
+      return opgave.status == "Mangler";
+    }
+  });
 
   let selected: "upcoming" | "finished" | "missing" = "upcoming";
 </script>
 
-<div class="container">
+<div class="page-container">
   <div class="flex flex-col">
     <h1>Opgaver</h1>
     <div class="flex flex-row pb-4">
@@ -71,39 +84,48 @@
         variant={selected == "missing" ? "default" : "outline"}>Mangler</Badge
       >
     </div>
-    {#each opgaver as opgave}
-      <div class="not-prose">
-        <HoverCard>
-          <HoverCardTrigger>
-            <Card
-              class="mb-4"
-              on:click={() => goto(opgave.link)}
-              animate={true}
-            >
-              <CardHeader>
-                <CardTitle>{opgave.title}</CardTitle>
-                <CardDescription>{opgave.description}</CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <Badge>om 3 dage</Badge>
-              </CardFooter>
-            </Card>
-          </HoverCardTrigger>
-          <HoverCardContent>
-            <Card class="mb-4">
-              <CardHeader>
-                <CardTitle>{opgave.title}</CardTitle>
-                <CardDescription>{opgave.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                Status: {opgave.status} <br />
-                Hold: {opgave.hold} <br />
-                Frist: 4/6-2023 22:00 (om 3 dage) <br />
-              </CardContent>
-            </Card>
-          </HoverCardContent>
-        </HoverCard>
-      </div>
-    {/each}
+    {#if loading}
+      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
+      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
+      <Skeleton class="w-full h-36 rounded-[10px]" />
+    {:else if assignments.length > 0}
+      {#each assignments as assignment}
+        <div class="not-prose">
+          <HoverCard>
+            <HoverCardTrigger>
+              <Card
+                class="mb-4"
+                on:click={() => goto(assignment.link)}
+                animate={true}
+              >
+                <CardHeader>
+                  <CardTitle>{assignment.title}</CardTitle>
+                  <CardDescription>{assignment.description}</CardDescription>
+                </CardHeader>
+                <CardFooter>
+                  <Badge>{assignment.date.toRelative()}</Badge>
+                </CardFooter>
+              </Card>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <Card class="mb-4">
+                <CardHeader>
+                  <CardTitle>{assignment.title}</CardTitle>
+                  <CardDescription>{assignment.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  Status: {assignment.status} <br />
+                  Hold: {assignment.hold} <br />
+                  Frist: {assignment.date.toLocaleString(DateTime.DATETIME_MED)}
+                  ({assignment.date.toRelative()}) <br />
+                </CardContent>
+              </Card>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
+      {/each}
+    {:else}
+      <p class="text-center">Du har ingen opgaver.</p>
+    {/if}
   </div>
 </div>

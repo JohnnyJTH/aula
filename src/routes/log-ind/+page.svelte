@@ -52,77 +52,82 @@
       }
       $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
       loading = false;
-      goto("/")
+      goto("/");
     }
     loading = false;
   }
 </script>
 
-<Card>
-  <CardHeader>
-    <CardTitle>Log ind</CardTitle>
-    <CardDescription>Log ind med din Lectio konto nedenfor.</CardDescription>
-  </CardHeader>
-  <CardContent class="grid gap-4">
-    <div class="grid gap-2">
-      <Label for="username">Brugernavn</Label>
-      <Input
-        bind:value={username}
-        id="username"
-        type="text"
-        autocomplete="username"
-      />
-    </div>
-    <div class="grid gap-2">
-      <Label for="password">Kodeord</Label>
-      <Input
-        bind:value={password}
-        id="password"
-        type="password"
-        autocomplete="current-password"
-      />
-    </div>
-    <div class="grid gap-2">
-      <Label for="school">Skole</Label>
-      <select bind:value={school} id="school">
-        <option value="0" disabled selected={school == 0}>Vælg skole...</option>
-        {#each Object.entries(schools) as [key, data]}
-          <option value={data.id} selected={school == data.id}
-            >{data.skole}</option
+<div class="page-container">
+  <Card>
+    <CardHeader>
+      <CardTitle>Log ind</CardTitle>
+      <CardDescription>Log ind med din Lectio konto nedenfor.</CardDescription>
+    </CardHeader>
+    <CardContent class="grid gap-4">
+      <div class="grid gap-2">
+        <Label for="username">Brugernavn</Label>
+        <Input
+          bind:value={username}
+          id="username"
+          type="text"
+          autocomplete="username"
+        />
+      </div>
+      <div class="grid gap-2">
+        <Label for="password">Kodeord</Label>
+        <Input
+          bind:value={password}
+          id="password"
+          type="password"
+          autocomplete="current-password"
+        />
+      </div>
+      <div class="grid gap-2">
+        <Label for="school">Skole</Label>
+        <select bind:value={school} id="school">
+          <option value="0" disabled selected={school == 0}
+            >Vælg skole...</option
           >
-        {/each}
-      </select>
-    </div>
-    <div class="mt-4 flex items-center justify-between space-x-2">
-      <Label for="save-school" class="flex flex-col space-y-1">
-        <span>Gem Skole</span>
-        <span class="font-normal leading-snug text-muted-foreground">
-          Gem skolen, så du ikke behøver at vælge den næste gang du logger ind.
-        </span>
-      </Label>
-      <Switch
-        id="save-school"
-        bind:rootChecked={saveSchool}
-        rootDisabled={saveCredentials}
-      />
-    </div>
-    <div class="mt-4 flex items-center justify-between space-x-2">
-      <Label for="save-credentials" class="flex flex-col space-y-1">
-        <span>Gem Oplysninger</span>
-        <span class="font-normal leading-snug text-muted-foreground">
-          Gem dine oplysninger, så du ikke behøver at skrive dem næste gang du
-          logger ind.
-        </span>
-      </Label>
-      <Switch id="save-credentials" bind:rootChecked={saveCredentials} />
-    </div>
-  </CardContent>
-  <CardFooter>
-    <Button on:click={login} disabled={loading} class="w-full">
-      {#if loading}
-        <Loader class="mr-2" />
-      {/if}
-      Log ind
-    </Button>
-  </CardFooter>
-</Card>
+          {#each Object.entries(schools) as [key, data]}
+            <option value={data.id} selected={school == data.id}
+              >{data.skole}</option
+            >
+          {/each}
+        </select>
+      </div>
+      <div class="mt-4 flex items-center justify-between space-x-2">
+        <Label for="save-school" class="flex flex-col space-y-1">
+          <span>Gem Skole</span>
+          <span class="font-normal leading-snug text-muted-foreground">
+            Gem skolen, så du ikke behøver at vælge den næste gang du logger
+            ind.
+          </span>
+        </Label>
+        <Switch
+          id="save-school"
+          bind:rootChecked={saveSchool}
+          rootDisabled={saveCredentials}
+        />
+      </div>
+      <div class="mt-4 flex items-center justify-between space-x-2">
+        <Label for="save-credentials" class="flex flex-col space-y-1">
+          <span>Gem Oplysninger</span>
+          <span class="font-normal leading-snug text-muted-foreground">
+            Gem dine oplysninger, så du ikke behøver at skrive dem næste gang du
+            logger ind.
+          </span>
+        </Label>
+        <Switch id="save-credentials" bind:rootChecked={saveCredentials} />
+      </div>
+    </CardContent>
+    <CardFooter>
+      <Button on:click={login} disabled={loading} class="w-full">
+        {#if loading}
+          <Loader class="mr-2" />
+        {/if}
+        Log ind
+      </Button>
+    </CardFooter>
+  </Card>
+</div>
