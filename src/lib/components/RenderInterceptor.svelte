@@ -21,8 +21,26 @@
       const { valid } = await response.json();
       console.log(valid);
       if (!valid) {
-        $authStore.cookie = "";
-        return goto(redirectIfFail);
+        if ($authStore.username != "" && $authStore.password != "") {
+          const response = await fetch("https://api.betterlectio.dk/auth", {
+            headers: {
+              brugernavn: $authStore.username,
+              adgangskode: $authStore.password,
+              skole_id: String($authStore.school),
+            },
+          });
+          if (response.ok) {
+            $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
+          } else {
+            $authStore.username = "";
+            $authStore.password = "";
+            $authStore.cookie = "";
+            return goto(redirectIfFail);
+          }
+        } else {
+          $authStore.cookie = "";
+          return goto(redirectIfFail);
+        }
       }
     } else {
       return goto(redirectIfFail);
