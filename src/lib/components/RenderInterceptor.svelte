@@ -1,7 +1,6 @@
 <script lang="ts">
   import { afterNavigate, goto } from "$app/navigation";
   import { authStore } from "$lib/stores";
-  import { Loader } from "lucide-svelte";
   import { get, writable } from "svelte/store";
 
   export let redirectIfFail: string = "/log-ind";
