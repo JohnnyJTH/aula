@@ -89,7 +89,7 @@
       <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
       <Skeleton class="w-full h-36 rounded-[10px]" />
     {:else if assignments.length > 0}
-      {#each assignments as assignment}
+      {#each assignments.reverse() as assignment}
         <div class="not-prose">
           <HoverCard>
             <HoverCardTrigger>
