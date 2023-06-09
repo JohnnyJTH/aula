@@ -27,11 +27,12 @@
       }
     );
     const json = (await response.json()) as RawAssignment;
-    console.log(json.oplysninger.opgavebeskrivelse);
+
     assignment = {
       title: json.oplysninger.opgavetitel,
       description: json.oplysninger.opgavenote,
-      details: json.oplysninger.opgavebeskrivelse.replace(")", ")<br>"),
+      details: json.oplysninger.opgavebeskrivelse?.replace(")", ")<br>") ?? "",
+      status: json.afleveres_af.status_fravær.toLowerCase().replace("aflev.", "afleveret "),
       date: DateTime.fromFormat(
         json.oplysninger.afleveringsfrist,
         "d/M-yyyy HH:mm",
@@ -39,6 +40,7 @@
           locale: "da",
         }
       ),
+      billedTime: json.oplysninger.elevtid,
       class: json.oplysninger.hold,
       documents: json.opgave_indlæg.map((document) => ({
         // @ts-ignore
@@ -52,6 +54,10 @@
           id: document.bruger.bruger_id,
           name: document.bruger.navn,
         },
+      })),
+      participants: json.gruppemedlemmer.map((participant) => ({
+        id: participant.bruger_id,
+        name: participant.navn,
       })),
     };
     loading = false;
@@ -72,13 +78,29 @@
     <Skeleton class="!mt-4 w-full rounded-[10px] h-[8em]" />
   {:else}
     <section>
-      <h1 class="!mb-0">{assignment.title}</h1>
+      <h1 class="!mb-0">{assignment.title} ({assignment.class})</h1>
       <p class="!mt-0 !mb-0">{assignment.description}</p>
       {#if assignment.details}
         <h3 class="!mt-1 !mb-0">Opgavebeskrivelse</h3>
         <SvelteMarkdown source={assignment.details} />
       {/if}
+      <h3 class="!mt-1 !mb-0">Status</h3>
+      <p class="!mt-0 !mb-0">
+        Du har {assignment.status}
+        <br>
+        Elevtid: {assignment.billedTime}
+      </p>
     </section>
+    {#if assignment.participants.length > 1}
+      <section>
+        <h2 class="!mb-0">Gruppemedlemmer</h2>
+        <ul>
+          {#each assignment.participants as participant}
+            <li>{participant.name}</li>
+          {/each}
+        </ul>
+      </section>
+    {/if}
     <section>
       <h2 class="!mb-0">Afleveringer</h2>
       <p>
@@ -86,7 +108,7 @@
           DateTime.DATETIME_MED
         )} ({assignment.date.toRelative()})
       </p>
-      {#if assignment.documents}
+      {#if assignment.documents.length > 0}
         {#each assignment.documents as document}
           <a class="no-underline" href={document.url}>
             <Card class="mb-4">
@@ -102,7 +124,7 @@
           </a>
         {/each}
       {:else}
-        Ingen afleveringer endnu
+        Ingen afleveringer endnu.
       {/if}
     </section>
   {/if}

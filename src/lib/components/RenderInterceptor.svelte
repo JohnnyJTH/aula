@@ -8,6 +8,7 @@
 
   const showContent = writable(false);
   afterNavigate(async () => {
+    showContent.set(false);
     if (whitelisted.includes(window.location.pathname)) {
       return showContent.set(true);
     }
@@ -19,7 +20,6 @@
         },
       });
       const { valid } = await response.json();
-      console.log(valid);
       if (!valid) {
         if ($authStore.username != "" && $authStore.password != "") {
           const response = await fetch("https://api.betterlectio.dk/auth", {
@@ -30,8 +30,10 @@
             },
           });
           if (response.ok) {
+            console.log("Succesful auto-login");
             $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
           } else {
+            console.error("Failed auto-login");
             $authStore.username = "";
             $authStore.password = "";
             $authStore.cookie = "";
@@ -45,6 +47,7 @@
     } else {
       return goto(redirectIfFail);
     }
+    console.log("Valid cookie");
     showContent.set(true);
   });
 </script>

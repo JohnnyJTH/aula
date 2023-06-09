@@ -31,7 +31,7 @@ export type RawAssignment = {
         hold: string;
         i_undervisningsbeskrivelse: "Ja" | "Nej";
         karakterskala: string;
-        opgavebeskrivelse: string;
+        opgavebeskrivelse: string | null;
         opgavenote: string;
         opgavetitel: string;
     };
@@ -53,9 +53,12 @@ export type Assignment = {
     title: string;
     description: string;
     details: string;
+    status: string;
     date: DateTime;
+    billedTime: string;
     class: string;
     documents: Document[];
+    participants: User[];
 };
 
 export type SimpleAssignment = {

@@ -18,7 +18,10 @@
   import { authStore } from "$lib/stores";
   import { onMount } from "svelte";
   import { DateTime } from "luxon";
-  import type { SimpleAssignment, RawSimpleAssignment } from "$lib/types/assignments";
+  import type {
+    SimpleAssignment,
+    RawSimpleAssignment,
+  } from "$lib/types/assignments";
 
   let loading = true;
   let rawAssignments: SimpleAssignment[] = [];
@@ -31,7 +34,6 @@
       },
     });
     const data = await response.json();
-    console.log(data);
     rawAssignments = data.map((assignment: RawSimpleAssignment) => ({
       title: assignment.opgavetitel,
       description: assignment.opgavenote,
@@ -93,19 +95,17 @@
         <div class="not-prose">
           <HoverCard>
             <HoverCardTrigger>
-              <Card
-                class="mb-4"
-                on:click={() => goto(assignment.link)}
-                animate={true}
-              >
-                <CardHeader>
-                  <CardTitle>{assignment.title}</CardTitle>
-                  <CardDescription>{assignment.description}</CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <Badge>{assignment.date.toRelative()}</Badge>
-                </CardFooter>
-              </Card>
+              <a href={assignment.link}>
+                <Card class="mb-4" animate={true}>
+                  <CardHeader>
+                    <CardTitle>{assignment.title}</CardTitle>
+                    <CardDescription>{assignment.description}</CardDescription>
+                  </CardHeader>
+                  <CardFooter>
+                    <Badge>{assignment.date.toRelative()}</Badge>
+                  </CardFooter>
+                </Card>
+              </a>
             </HoverCardTrigger>
             <HoverCardContent>
               <Card class="mb-4">
