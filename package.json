@@ -38,6 +38,7 @@
     "lucide-svelte": "^0.240.0",
     "luxon": "^3.3.0",
     "radix-svelte": "^0.7.1",
+    "svelte-markdown": "^0.2.3",
     "tailwind-merge": "^1.13.0",
     "tailwindcss-animate": "^1.0.5"
   }

@@ -18,11 +18,11 @@
   import { authStore } from "$lib/stores";
   import { onMount } from "svelte";
   import { DateTime } from "luxon";
-  import type { Assignment, RawAssignment } from "$lib/types/assignments";
+  import type { SimpleAssignment, RawSimpleAssignment } from "$lib/types/assignments";
 
   let loading = true;
-  let rawAssignments: Assignment[] = [];
-  let assignments: Assignment[] = [];
+  let rawAssignments: SimpleAssignment[] = [];
+  let assignments: SimpleAssignment[] = [];
 
   onMount(async () => {
     const response = await fetch("https://api.betterlectio.dk/opgaver", {
@@ -32,7 +32,7 @@
     });
     const data = await response.json();
     console.log(data);
-    rawAssignments = data.map((assignment: RawAssignment) => ({
+    rawAssignments = data.map((assignment: RawSimpleAssignment) => ({
       title: assignment.opgavetitel,
       description: assignment.opgavenote,
       date: DateTime.fromFormat(assignment.frist, "d/M-yyyy HH:mm", {
@@ -40,7 +40,7 @@
       }),
       status: assignment.status,
       hold: assignment.hold,
-      link: assignment.exerciseid,
+      link: `/opgave/${assignment.exerciseid}`,
     }));
     loading = false;
   });

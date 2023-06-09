@@ -1,6 +1,64 @@
 import type { DateTime } from "luxon";
 
+type RawUser = {
+    bruger_id: string;
+    navn: string;
+}
+
+type RawDocument = {
+    bruger: RawUser;
+    dokument: string;
+    "indlæg": string;
+    tidspunkt: string;
+}
+
+export type RawAssignment = {
+    afleveres_af: {
+        afsluttet: boolean;
+        afventer: string;
+        elev: RawUser;
+        elevnote: string;
+        karakter: string;
+        karakternote: string;
+        "status_fravær": string;
+    };
+    gruppemedlemmer: RawUser[];
+    "opgave_indlæg": RawDocument[];
+    oplysninger: {
+        afleveringsfrist: string;
+        ansvarlig: RawUser;
+        elevtid: string;
+        hold: string;
+        i_undervisningsbeskrivelse: "Ja" | "Nej";
+        karakterskala: string;
+        opgavebeskrivelse: string;
+        opgavenote: string;
+        opgavetitel: string;
+    };
+};
+
+type User = {
+    id: string;
+    name: string;
+}
+
+type Document = {
+    url: string | null;
+    name: string | null;
+    date: DateTime;
+    user: User;
+};
+
 export type Assignment = {
+    title: string;
+    description: string;
+    details: string;
+    date: DateTime;
+    class: string;
+    documents: Document[];
+};
+
+export type SimpleAssignment = {
     title: string;
     description: string;
     date: DateTime;
@@ -9,7 +67,7 @@ export type Assignment = {
     link: string;
 };
 
-export type RawAssignment = {
+export type RawSimpleAssignment = {
     afventer: "Elev" | "Lærer" | "";
     "elev-tid": string;
     elevnote: string;
