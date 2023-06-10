@@ -10,6 +10,7 @@
   import { Skeleton } from "$components/ui/skeleton";
   import { authStore } from "$lib/stores";
   import type { Homework, RawHomework } from "$lib/types/homework";
+  import { constructInterval } from "$lib/utilities";
   import { DateTime } from "luxon";
   import { onMount } from "svelte";
 
@@ -32,8 +33,12 @@
           .setLocale("da"),
         lesson: {
           id: "1234",
-          name: "Perspektivering bla bla",
+          name: "Perspektivering bla bla (modul navn)",
           class: "L1d DA",
+          status: "afleveret",
+          room: "A.1.01",
+          note: "Husk at aflevere",
+          interval: constructInterval(""),
         },
         homework: "Lav en opgave",
       },
@@ -45,6 +50,10 @@
           id: "1234",
           name: "Perspektivering bla bla",
           class: "L1d DA",
+          status: "afleveret",
+          room: "A.1.01",
+          note: "Husk at aflevere",
+          interval: constructInterval(""),
         },
         homework: "Lav en opgave",
       },
@@ -56,6 +65,10 @@
           id: "1234",
           name: "Perspektivering bla bla",
           class: "L1d DA",
+          status: "afleveret",
+          room: "A.1.01",
+          note: "Husk at aflevere",
+          interval: constructInterval(""),
         },
         homework: "Lav en opgave",
       },

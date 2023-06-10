@@ -1,3 +1,5 @@
+import type { Interval } from "luxon";
+
 export type RawLesson = {
     navn: string | null;
     tidspunkt: string | null;
@@ -14,4 +16,8 @@ export type Lesson = {
     id: string;
     name: string;
     class: string;
+    status: string;
+    room: string;
+    note: string;
+    interval: Interval;
 }
