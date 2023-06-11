@@ -14,6 +14,7 @@
   import { Switch } from "$components/ui/switch";
   import { authStore } from "$lib/stores";
   import { Loader } from "lucide-svelte";
+  import { DateTime } from "luxon";
   import { onMount } from "svelte";
 
   let saveSchool = true;
@@ -51,6 +52,7 @@
         $authStore.password = password;
       }
       $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
+      $authStore.lastLogin = DateTime.now().toISO();
       loading = false;
       goto("/");
     }
