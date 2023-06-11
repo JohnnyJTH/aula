@@ -57,6 +57,6 @@
 {:else}
   <div class="flex flex-col items-center justify-center">
     <h1 class="text-2xl font-bold">Loading</h1>
-    <p class="text-gray-500">Please wait while we check your credentials</p>
+    <p class="text-gray-500">Vent venligst, mens vi tjekker dine login-oplysninger.</p>
   </div>
 {/if}
