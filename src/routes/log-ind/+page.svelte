@@ -25,7 +25,7 @@
   let saveCredentials = false;
 
   let schools: any[] = [];
-  let school: number = 0;
+  let school = 0;
   onMount(async () => {
     schools = await fetch("https://api.betterlectio.dk/skoler").then((res) =>
       res.json()
@@ -33,9 +33,9 @@
     school = $authStore.school;
   });
 
-  let username: string;
-  let password: string;
-  let loading: boolean = false;
+  let username = "";
+  let password = "";
+  let loading = false;
   async function login() {
     loading = true;
     const response = await fetch("https://api.betterlectio.dk/auth", {
@@ -56,6 +56,9 @@
       loading = false;
       goto("/");
     }
+    username = "";
+    password = "";
+    school = 0;
     loading = false;
   }
 </script>
@@ -124,7 +127,11 @@
       </div>
     </CardContent>
     <CardFooter>
-      <Button on:click={login} disabled={loading} class="w-full">
+      <Button
+        on:click={login}
+        disabled={loading || !username || !password || !school}
+        class="w-full"
+      >
         {#if loading}
           <Loader class="mr-2" />
         {/if}
