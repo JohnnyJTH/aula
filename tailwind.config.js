@@ -15,7 +15,6 @@ const config = {
 		},
 		extend: {
 			backgroundImage: {
-				// "light": "linear-gradient(174.2deg,rgba(255, 244, 228, 1) 7.1%,rgba(240, 246, 238, 1) 67.4%)",
 				"light": "linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%)",
 				"dark": "radial-gradient(circle, rgba(28,28,28,1) 0%, rgba(28,28,28,1) 100%)"
 			},
@@ -61,6 +60,16 @@ const config = {
 			},
 			fontFamily: {
 				sans: [...fontFamily.sans]
+			},
+			animation: {
+				"pulse-slow": "pulse 6s infinite cubic-bezier(0.4, 0, 0.6, 1)",
+				"background-shine": "background-shine 2s linear infinite",
+			},
+			keyframes: {
+				'background-shine': {
+					from: { backgroundPosition: '0 0' },
+					to: { backgroundPosition: '-200% 0' }
+				},
 			}
 		}
 	},

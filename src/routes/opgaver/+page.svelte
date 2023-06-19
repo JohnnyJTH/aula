@@ -22,6 +22,7 @@
     SimpleAssignment,
     RawSimpleAssignment,
   } from "$lib/types/assignments";
+  import { Tab } from "$components/ui/tab";
 
   let loading = true;
   let rawAssignments: SimpleAssignment[] = [];
@@ -64,26 +65,26 @@
   <div class="flex flex-col">
     <h1>Opgaver</h1>
     <div class="flex flex-row pb-4">
-      <Badge
+      <Tab
         on:click={() => {
           selected = "upcoming";
         }}
-        class="text-base cursor-pointer mr-2"
-        variant={selected == "upcoming" ? "default" : "outline"}>Kommende</Badge
+        class="cursor-pointer mr-2"
+        selected={selected == "upcoming"}>Kommende</Tab
       >
-      <Badge
+      <Tab
         on:click={() => {
           selected = "finished";
         }}
-        class="text-base cursor-pointer"
-        variant={selected == "finished" ? "default" : "outline"}>Færdige</Badge
+        class="cursor-pointer mr-2"
+        selected={selected == "finished"}>Færdige</Tab
       >
-      <Badge
+      <Tab
         on:click={() => {
           selected = "missing";
         }}
-        class="text-base cursor-pointer mr-2"
-        variant={selected == "missing" ? "default" : "outline"}>Mangler</Badge
+        class="cursor-pointer"
+        selected={selected == "missing"}>Mangler</Tab
       >
     </div>
     {#if loading}

@@ -32,7 +32,7 @@
 
   :is(.dark .glass-morphism) {
     background: rgba(0, 0, 0, 0.25);
-    box-shadow: 0 8px 32px 0 rgba(188, 19, 254, 0.1);
+    box-shadow: 0 8px 32px 0 #27253a7a;
   }
 
   .glass-morphism-3d:hover {
