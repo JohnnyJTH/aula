@@ -1,0 +1,45 @@
+{
+    "short_name": "Aula",
+    "name": "Aula",
+    "description": "Lectio PWA.",
+    "start_url": "/",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "favicon-light.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Opgaver",
+            "short_name": "Opgaver",
+            "description": " Hold styr på dine opgaver.",
+            "url": "/opgaver",
+            "icons": [
+                {
+                    "src": "tasks.png",
+                    "sizes": "256x256",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "Lektier",
+            "short_name": "Lektier",
+            "description": "Få en oversigt over dine lektier.",
+            "url": "/lektier",
+            "icons": [
+                {
+                    "src": "homework.png",
+                    "sizes": "256x256",
+                    "type": "image/png"
+                }
+            ]
+        }
+    ],
+    "display": "standalone",
+    "background_color": "#fff",
+    "theme_color": "#adffb9"
+}
