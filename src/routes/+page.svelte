@@ -196,7 +196,7 @@
       <h1>Dokumenter</h1>
       {#if loading}
         loading
-      {:else if messages.length > 0}
+      {:else if documents.length > 0}
         {#each documents as document}
           <a
             target="_blank"
