@@ -2,9 +2,13 @@
   import { Skeleton } from "$components/ui/skeleton";
   import { Timeline, TimelineItem } from "$components/ui/timeline";
   import { authStore } from "$lib/stores";
+  import type { Document, RawDocument } from "$lib/types/documents";
+  import type { Form, RawForm } from "$lib/types/forms";
   import type { Lesson, RawLesson } from "$lib/types/lesson";
+  import type { Message, RawMessage } from "$lib/types/messages";
   import type { News, RawNews } from "$lib/types/news";
   import { constructInterval } from "$lib/utilities";
+  import { decodeUserID } from "$lib/utilities/cookie";
   import { DateTime } from "luxon";
   import { onMount } from "svelte";
   import SvelteMarkdown from "svelte-markdown";
@@ -12,6 +16,9 @@
   let loading = true;
   let lessons: Lesson[] = [];
   let news: News[] = [];
+  let messages: Message[] = [];
+  let documents: Document[] = [];
+  let forms: Form[] = [];
   onMount(async () => {
     const response = await fetch("https://api.betterlectio.dk/forside", {
       headers: {
@@ -21,7 +28,15 @@
     const data = (await response.json()) as {
       skema: RawLesson[];
       aktuelt: RawNews[];
+      kommunikation: {
+        beskeder: RawMessage[];
+        dokumenter: RawDocument[];
+      };
+      undervisning: {
+        spørgeskemaer: RawForm[];
+      };
     };
+    console.log(data);
 
     lessons = data.skema.map((lesson) => {
       return {
@@ -45,12 +60,44 @@
       };
     });
 
+    messages = data.kommunikation.beskeder.map((message) => {
+      return {
+        sender: message.afsender,
+        date: DateTime.fromFormat(message.dato, "d/M-yyyy HH:mm", {
+          locale: "da",
+        }),
+        id: +message.id,
+        title: message.navn,
+      };
+    });
+
+    documents = data.kommunikation.dokumenter.map((document) => {
+      return {
+        author: document.afsender,
+        date: DateTime.fromFormat(document.dato, "d/M-yyyy HH:mm", {
+          locale: "da",
+        }),
+        id: +document.id,
+        title: document.navn,
+      };
+    });
+
+    forms = data.undervisning.spørgeskemaer.map((form) => {
+      return {
+        date: DateTime.fromFormat(form.dato, "d/M-yyyy HH:mm", {
+          locale: "da",
+        }),
+        id: +form.id,
+        title: form.navn,
+      };
+    });
+
     loading = false;
   });
 </script>
 
 <div class="page-container">
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-4">
     <div class="lg:col-span-2 bg-white dark:bg-black rounded-2xl p-6">
       <h1>Skema</h1>
       {#if loading}
@@ -103,6 +150,107 @@
         {/each}
       {:else}
         <p class="text-center">Ingen aktuelle nyheder.</p>
+      {/if}
+    </div>
+    <div
+      class="lg:col-span-1 lg:row-start-2 bg-white dark:bg-black rounded-2xl p-6"
+    >
+      <h1>Beskeder</h1>
+      {#if loading}
+        loading
+      {:else if messages.length > 0}
+        {#each messages as message}
+          <a
+            target="_blank"
+            href={`https://www.lectio.dk/lectio/${
+              $authStore.school
+            }/beskeder2.aspx?type=showthread&id=${
+              message.id
+            }&elevid=${decodeUserID($authStore.cookie)}`}
+            class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-gray-900 hover:rounded-2xl px-4"
+          >
+            <div class="flex-1 min-w-0">
+              <p
+                class="text-sm font-semibold text-gray-900 truncate dark:text-white"
+              >
+                {message.title}
+              </p>
+              <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                {message.sender}
+              </p>
+            </div>
+            <div
+              class="inline-flex items-center text-sm text-gray-900 dark:text-white"
+            >
+              {message.date.toLocaleString(DateTime.DATE_SHORT)}
+            </div>
+          </a>
+        {/each}
+      {:else}
+        <p class="text-center">Ingen nye beskeder.</p>
+      {/if}
+    </div>
+    <div
+      class="lg:col-span-1 lg:row-start-2 bg-white dark:bg-black rounded-2xl p-6"
+    >
+      <h1>Dokumenter</h1>
+      {#if loading}
+        loading
+      {:else if messages.length > 0}
+        {#each documents as document}
+          <a
+            target="_blank"
+            href={`https://www.lectio.dk/lectio/${$authStore.school}/dokumenthent.aspx?documentid=${document.id}`}
+            class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-gray-900 hover:rounded-2xl px-4"
+          >
+            <div class="flex-1 min-w-0">
+              <p
+                class="text-sm font-semibold text-gray-900 truncate dark:text-white"
+              >
+                {document.title}
+              </p>
+              <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                {document.author}
+              </p>
+            </div>
+            <div
+              class="inline-flex items-center text-sm text-gray-900 dark:text-white"
+            >
+              {document.date.toLocaleString(DateTime.DATE_SHORT)}
+            </div>
+          </a>
+        {/each}
+      {:else}
+        <p class="text-center">Ingen nye dokumenter.</p>
+      {/if}
+    </div>
+    <div
+      class="lg:col-span-1 lg:row-start-2 bg-white dark:bg-black rounded-2xl p-6"
+    >
+      <h1>Spørgeskemaer</h1>
+      {#if loading}
+        loading
+      {:else if forms.length > 0}
+        {#each forms as form}
+          <a
+            target="_blank"
+            href={`https://www.lectio.dk/lectio/681/spoergeskema/spoergeskema_besvar.aspx?id=${form.id}`}
+            class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-gray-900 hover:rounded-2xl px-4"
+          >
+            <div class="flex-1 min-w-0">
+              <p
+                class="text-sm font-semibold text-gray-900 truncate dark:text-white"
+              >
+                {form.title}
+              </p>
+              <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                {form.date.toLocaleString(DateTime.DATETIME_MED)} ({form.date.toRelative()})
+              </p>
+            </div>
+          </a>
+        {/each}
+      {:else}
+        <p class="text-center">Ingen nye spørgeskemaer.</p>
       {/if}
     </div>
   </div>
