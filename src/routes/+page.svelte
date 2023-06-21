@@ -36,7 +36,6 @@
         spørgeskemaer: RawForm[];
       };
     };
-    console.log(data);
 
     lessons = data.skema.map((lesson) => {
       return {
