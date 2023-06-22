@@ -28,7 +28,7 @@
             headers: {
               brugernavn: $authStore.username,
               adgangskode: $authStore.password,
-              skole_id: String($authStore.school),
+              skoleid: String($authStore.school),
             },
           });
           if (response.ok) {
@@ -60,7 +60,7 @@
               headers: {
                 brugernavn: $authStore.username,
                 adgangskode: $authStore.password,
-                skole_id: String($authStore.school),
+                skoleid: String($authStore.school),
               },
             });
             if (response.ok) {

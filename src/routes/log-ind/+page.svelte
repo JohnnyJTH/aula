@@ -42,7 +42,7 @@
       headers: {
         brugernavn: username,
         adgangskode: password,
-        skole_id: String(school),
+        skoleid: String(school),
       },
     });
     if (response.ok) {
